@@ -36,7 +36,7 @@ Par exemple, les 100 premières interactions protéine-protéine humaines dispon
 
 Numero de champ | Signification Biologique|
  --- | --- 
-1 |
+1 | 
 2 |
 3 |
 4 |
@@ -77,7 +77,7 @@ ans = httpReq.text
 
 ```
 
-* Extraire les lignes MITAB impliquant des protéines humaines de EBV 
+* Extraire les lignes MITAB impliquant des protéines humaines et des protéines d'EBV 
 
 ```
 
@@ -119,7 +119,7 @@ A l'aide des données MITAB et de la librarie [networkx](https://networkx.github
 
 Les noms de gènes sont parfois plus parlants que des accesseurs UNIPROT. A l'aide du fichier `./data/Calderwood_EBV_proteome.xml`  créez une table de conversion entre accesseur UNIPROT et nom de gène.
 
-Pour vous aidez dans cette tâche, vous disposez du "parser" XML suivant qui étant donné un numéro d'accession UNIPROT et un document XML retourne un dictionaire d'informations concernant cette protéine. Le code permettant d'extraire l'information du nom de gène à été supprimée lors d'un `git push` malencontreux, à vous de le completer avant utisation.
+Pour vous aidez dans cette tâche, vous disposez du "parser" XML suivant qui étant donné un numéro d'accession UNIPROT et un document XML retourne un dictionaire d'informations concernant cette protéine. Le code permettant d'extraire l'information du nom de gène à été supprimée lors d'un `git push` malencontreux, à vous de le completer avant utilisation.
 
 ```python
 from xml.etree.ElementTree import parse, dump, fromstring, register_namespace, ElementTree
@@ -174,6 +174,8 @@ Vous pouvez desormais dessiner le réseau dans lequel:
 - les arêtes relient deux protéines en interaction
 - les noeuds sont les noms des gènes correspondant aux protéines.
 
+![Graphique](ebv_ebv_network_gene.png)
+
 # Identification des cibles protéiques du virus.
 
 Pour perturber et détourner à son profit le fonctionnement du lymphocyte, le matériel protéique du virus va interagir préferentiellement avec certains processus cellulaires.
@@ -182,9 +184,11 @@ En suivant, la méthode précédente dessiner le réseau dans lequel:
 
 - les arêtes relient une protéine humaine et une protéine virale en interaction.
 - les noeuds sont les noms des gènes correspondant aux protéines.
-- les noeuds des protéines virales et humaines sont déssinés différement.
+- les noeuds des protéines virales et humaines sont dessinés différement.
 
 Vous pouvez jouer sur la taille de la figure et la constante de ressort *k* du rendu [spring_layout](https://networkx.org/documentation/stable/reference/generated/networkx.drawing.layout.spring_layout.html) pour augmenter la lisibilité du graphique
+
+![Graphique](ebv_human_network_gene.png)
 
 ###### Optionel
 
