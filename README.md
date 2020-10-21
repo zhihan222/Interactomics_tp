@@ -3,7 +3,7 @@
 
 ## Contexte biologique
 
-Nous allons reproduire certaines analyses rapportées dans une étude du réseau d'interaction des protéines du [virus d'Epstein-Bar](https://en.wikipedia.org/wiki/Epstein%E2%80%93Barr_virus) et des protéines de son hôte principal l'homme ([Calderwood et al.](https://www.pnas.org/content/104/18/7606)). Le virus EBV cible priorictairement le lymphocyte B humain.  
+Nous allons reproduire certaines analyses rapportées dans une étude du réseau d'interaction des protéines du [virus d'Epstein-Bar](https://en.wikipedia.org/wiki/Epstein%E2%80%93Barr_virus) avec certaines protéines de son hôte principal l'homme ([Calderwood et al.](https://www.pnas.org/content/104/18/7606)). Le cible cellulaire principale du virus EBV est lymphocyte B humain.  
 
 ## Mise en place
 
@@ -24,12 +24,12 @@ Les fiches UNIPROT des protéines étudiées dans la publication sont disponible
 
 Vous deverez recupérer les données d'interactions étudiées dans la publication grâce au protocole [PSICQUIC](https://psicquic.github.io/PsicquicSpec_1_4_Rest.html).
 
-Ce protocole permet l'accès à distance à de nombreuses bases de données d'interactions protéines-protéines. Les interactions présentes dans ces bases de données sont obtenues par curation minutieuse de la littérature scientifique. Les interactions sont uniquement binaires (2 protéines) et toujours associées à la publication d'origine.
+Ce protocole permet l'accès à distance à de nombreuses bases de données d'interactions protéine-protéine. Les interactions présentes dans ces bases de données sont obtenues par curation minutieuse de la littérature scientifique. Les interactions sont uniquement binaires (2 protéines) et toujours associées à la publication d'origine.
 D'autres informations peuvent également être rapportées.
 Le format standard de PSICQUIC, tabulé, est nommé [MITAB](https://psicquic.github.io/PSIMITAB.html).
 Les requêtes sont formulées aux bases de données à l'aide d'un protocole REST obéissant à la syntaxe [MIQL](https://psicquic.github.io/MiqlReference.html)
 
-Pour ce TP nous utiliserons la bases de données [Intact](https://www.ebi.ac.uk/intact/), dont le service PSICQUIC est accessible à l'URL: `http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search`
+Pour ce TP nous utiliserons la bases de données [Intact](https://www.ebi.ac.uk/intact/), dont le service PSICQUIC est accessible à l'URL: `http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search`.
 Par exemple, les 100 premières interactions protéine-protéine humaines disponibles dans Intact sont accessibles via l'URL: `http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search/query/species:human?firstResult=0&maxResults=100`
 
 ##### Quelles sont les significations des champs suivants du format MITAB 2.X?
@@ -59,40 +59,67 @@ ans = httpReq.text
 
 ##### Quelles techniques experimentales mesurent les interactions rapportées dans cette publication?
 
-##### Proposer deux expressions régulières et les champs auquel les appliquer pour
+```
+
+```
+
+##### Proposer deux expressions régulières et les champs auxquels les appliquer pour
 
 * Ne retenir que les lignes MITAB dans lesquelles chaque interactant possède un identifiant UNIPROT
+
 ```
+
 ```
 
 * Extraire les lignes MITAB impliquant uniquement des protéines de EBV
+
 ```
+
 ```
 
 * Extraire les lignes MITAB impliquant des protéines humaines de EBV 
+
 ```
+
 ```
 
 ##### Combien de protéines EBV sont impliquées et pour combien d'interactions EBV/EBV?
 
+```
+
+```
+
 ##### Combien de protéines humaines sont impliquées et pour combien d'interaction EBV/Human?
+
+```
+
+```
 
 ###### Pour la suite du travail assurez-vous d'avoir les deux jeux de données MITAB suivants
 
-* MITAB EBV/EBV
-* MITAB EBV/Human
+- MITAB EBV/EBV
+- MITAB EBV/Human
 
-### Construction du réseau d'interaction EBV/EBV
+### Construction du réseau d'interactions EBV/EBV
+
 A l'aide des données MITAB et de la librarie [networkx](https://networkx.github.io/documentation/latest/
-), représentez graphiquement un réseau dans lequels:
+), représentez graphiquement un réseau dans lequel:
 
-- les noeuds sont des identifiants uniprot
+- les noeuds sont des identifiants UNIPROT
 
-- les arêtes relies deux protéines en interaction
+- les arêtes relient deux protéines en interaction
 
-Les noms de gènes sont parfois plus parlant que des accesseur UNIPROT. A l'aide du fichier `./data/Calderwood_EBV_proteome.xml`  créez une table de conversion entre accesseur UNIPROT et nom de gène.
+![Graphique](ebv_ebv_network_uniprot.png)
 
-Pour vous aidez dans cette tâche, vous disposez du "parser" XML suivant qui étant donné un numéro d'accession UNIPROT et un document XML vous retourne un dictionaire d'informations concernant cette protéine. Le code permettant d'extraire l'information du nom de gène à été supprimée lors d'un `git push` malencontreux, à vous de le completer avant utisation.
+##### Décrivez brièvement ce réseau
+
+```
+
+```
+
+Les noms de gènes sont parfois plus parlants que des accesseurs UNIPROT. A l'aide du fichier `./data/Calderwood_EBV_proteome.xml`  créez une table de conversion entre accesseur UNIPROT et nom de gène.
+
+Pour vous aidez dans cette tâche, vous disposez du "parser" XML suivant qui étant donné un numéro d'accession UNIPROT et un document XML retourne un dictionaire d'informations concernant cette protéine. Le code permettant d'extraire l'information du nom de gène à été supprimée lors d'un `git push` malencontreux, à vous de le completer avant utisation.
 
 ```python
 from xml.etree.ElementTree import parse, dump, fromstring, register_namespace, ElementTree
@@ -125,10 +152,10 @@ def proteinDict(uniprotID, root):
             if acc.text == uniprotID: # entry is the node matching provided UNIPROT accessor
                 e = entry.find(f"{ns}protein/{ns}recommendedName/{ns}fullName")
                 if not e is None:
-                    data["name"] = e.text 
-                e = entry.find(f"{ns}gene/{ns}name")
+                    data["name"] = e.text
+                e = "OUPSS##!!!"
                 if not e is None:
-                    data["geneName"] = e.text         
+                    data["geneName"] = e.text
 
                 data["GOterms"] = goTerms(entry)
                 return data
@@ -239,20 +266,27 @@ with open('graph.json', 'w') as f:
 
 ```javascript
 %%javascript
+// Fetch D3 library
+const d3path = "https://d3js.org/d3.v6.min.js"
+// Or load it locally, by default served from ~.jupyter/extensions
+//const d3path = "d3.v6.min.js"
+ console.log("Starting");
 // We load the d3.js library from the Web.
-require.config({paths:
-    {d3: "https://d3js.org/d3.v6.min.js"}});
+require.config( { paths : { d3: d3path }
+    } );
+
 require(["d3"], function(d3) {
+    console.log("Loading");
   // The code in this block is executed when the
   // d3.js library has been loaded.
 
   // First, we specify the size of the canvas
   // containing the visualization (size of the
   // <div> element).
-  let width = 800, height = 800;
+  var width = 800, height = 800;
 
   // We create a color scale.
-  let color = d3.scale.category10();
+  var color = d3.scale.category10();
 
   // Create scale for node radius
   let rMin = 3, rMax = 12;
@@ -307,11 +341,10 @@ require(["d3"], function(d3) {
       })
       .call(force.drag);
 
-      // We configure the node radius scale
-      const rScale = d3.scale.linear()
-          .domain([degMin, degMax]) // unit: node degree
+      
+      let rScale = d3.scale.linear()
+          .domain([degMin, degMax]) // unit: km
           .range([rMin,rMax]); // unit: pixels
-      // We modify the radius of drawn nodes
       node.attr("r", function(d) {
            return rScale(d.weight);
       });  // radius
@@ -336,5 +369,8 @@ require(["d3"], function(d3) {
     force.start();
     console.log("OK");
   });
+},
+function (err) {
+    console.log("Could not load JS library " + err);
 });
 ```
