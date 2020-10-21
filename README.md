@@ -89,7 +89,7 @@ ans = httpReq.text
 
 ```
 
-##### Combien de protéines humaines sont impliquées et pour combien d'interaction EBV/Human?
+##### Combien de protéines humaines sont impliquées et pour combien d'interactions EBV/Human?
 
 ```
 
@@ -178,7 +178,7 @@ Vous pouvez desormais dessiner le réseau dans lequel:
 
 Pour perturber et détourner à son profit le fonctionnement du lymphocyte, le matériel protéique du virus va interagir préferentiellement avec certains processus cellulaires.
 
-En suivant, la méthode précendente dessiner le réseau dans lequel:
+En suivant, la méthode précédente dessiner le réseau dans lequel:
 
 - les arêtes relient une protéine humaine et une protéine virale en interaction.
 - les noeuds sont les noms des gènes correspondant aux protéines.
@@ -188,7 +188,7 @@ Vous pouvez jouer sur la taille de la figure et la constante de ressort *k* du r
 
 ###### Optionel
 
-Les noeuds du réseau d'interaction peut aussi être divisés en deux partitions, humaine et virale. Vous disposez, ci-dessous d'un exmple de rendu graphique "bipartite" sur deux selections arbitraires de noeuds. Essayez de l'adapter au problème de représentation graphique du réseau d'interaction ENB/Human
+Les noeuds du réseau d'interaction peut aussi être divisés en deux partitions, humaine et virale. Vous disposez, ci-dessous d'un exemple de rendu graphique "bipartite" sur deux selections arbitraires de noeuds. Essayez de l'adapter au problème de représentation graphique du réseau d'interaction EBV/Humain
 
 ```python
 import networkx as nx
@@ -209,14 +209,25 @@ nx.draw_networkx_edges(G, pos, width=0.5)
 ##### Identification des processus biologiques ciblés par le virus
 
 Nous allons observés les termes GO présents dans les protéines humaines les plus ciblées par EBV
-* Classer les noueds, protéines humaines, par degrés décroissants
-* Lister leur termes GO
-* Quels termes reviennent fréquemment?
-* Connaissant l'organisation de l'ontologie GO, quelles suggestions pourriez vous faire afin d'augmenter la qualité de l'analyse.
+
+1. Classer les noueds, protéines humaines, par degré décroissant.
+2. Lister les termes GO des protéines les plus connectées
+
+- Quels termes reviennent fréquemment?
+
+```
+
+```
+
+- Connaissant l'organisation de l'ontologie GO, quelles suggestions pourriez vous faire afin d'augmenter la qualité de l'analyse?
+
+```
+
+```
 
 ##### Bouquet final !
 
-Bien souvent, un degré élevé d'interaction est requis pour visualiser des graphs complexes. Le JavaScript, notamment la librairie [D3](https://d3js.org/), est actuellement une solution de technique de choix pour construire des représentations visuelles riches et interactives.
+Bien souvent, un degré élevé d'interaction est requis pour visualiser des graphs complexes. Le JavaScript, notamment la librairie [D3](https://d3js.org/), est actuellement une solution technique de choix pour construire des représentations visuelles riches et interactives.
 
 ###### 1) Production d'un fichier JSON, encodant le graph d'interaction EBV/Human
 
@@ -340,10 +351,9 @@ require(["d3"], function(d3) {
           degMax = d.weight > degMax ? d.weight : degMax;
       })
       .call(force.drag);
-
-      
+      // We parameterize the radius scale according to data
       let rScale = d3.scale.linear()
-          .domain([degMin, degMax]) // unit: km
+          .domain([degMin, degMax]) // unit: degree
           .range([rMin,rMax]); // unit: pixels
       node.attr("r", function(d) {
            return rScale(d.weight);
