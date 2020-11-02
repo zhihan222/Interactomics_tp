@@ -63,33 +63,23 @@ ans = httpReq.text
 
 ```
 
-##### Proposer deux expressions régulières et les champs auxquels les appliquer pour
+#### Extraction des deux sous-jeux d'interactions suivants:
+- Interactions EBV-EBV
+- Interactions EBV-Humaine
 
-* Ne retenir que les lignes MITAB dans lesquelles chaque interactant possède un identifiant UNIPROT
 
-```
+**Ne retenir que les lignes MITAB dans lesquelles chaque interactant possède un identifiant UNIPROT**
 
-```
+##### Proposer les expressions régulières et les champs auxquels les appliquer pour opérer les filtres suivants:
+- Extraire les lignes MITAB impliquant uniquement des protéines d'EBV, quel est leur nombre ?
+- Extraire les lignes MITAB impliquant des protéines humaines et des protéines d'EBV, quel est leur nombre ?
 
-* Extraire les lignes MITAB impliquant uniquement des protéines de EBV
+Jeux d'interactions | Numero de champ  | Expression(s) régulière(s) | Nombre d'interactions | Nombres d'interactants 
+---                 |      ---         |          ---         |          ---          |         ---
+**EBV-EBV**         |                  |      eg:`[\S]+`         |                       |
+**EBV-Human**       |                  |      eg:`[\s]([\d]+)`   |                       |
 
-```
-
-```
-
-* Extraire les lignes MITAB impliquant des protéines humaines et des protéines d'EBV 
-
-```
-
-```
-
-##### Combien de protéines EBV sont impliquées et pour combien d'interactions EBV/EBV?
-
-```
-
-```
-
-##### Combien de protéines humaines sont impliquées et pour combien d'interactions EBV/Human?
+##### Combien de protéines humaines et virales sont respectivement dans jeux d'interactions EBV-Human?
 
 ```
 
@@ -99,6 +89,8 @@ ans = httpReq.text
 
 - MITAB EBV/EBV
 - MITAB EBV/Human
+
+Chacun ne contetant que des interactants référés par un numéro d'accession UNIPROT
 
 ### Construction du réseau d'interactions EBV/EBV
 
@@ -214,7 +206,7 @@ nx.draw_networkx_edges(G, pos, width=0.5)
 
 Nous allons observés les termes GO présents dans les protéines humaines les plus ciblées par EBV
 
-1. Classer les noueds, protéines humaines, par degré décroissant.
+1. Classer les noeuds, protéines humaines, par degré décroissant.
 2. Lister les termes GO des protéines les plus connectées
 
 - Quels termes reviennent fréquemment?
