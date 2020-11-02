@@ -74,12 +74,12 @@ ans = httpReq.text
 - Extraire les lignes MITAB impliquant uniquement des protéines d'EBV, quel est leur nombre ?
 - Extraire les lignes MITAB impliquant des protéines humaines et des protéines d'EBV, quel est leur nombre ?
 
-Jeux d'interactions | Numero de champ  | Expression(s) régulière(s) | Nombre d'interactions | Nombres d'interactants 
----                 |      ---         |          ---         |          ---          |         ---
-**EBV-EBV**         |                  |      eg:`[\S]+`         |                       |
-**EBV-Human**       |                  |      eg:`[\s]([\d]+)`   |                       |
+Jeux d'interactions | [N°champ 1] Expression(s) régulière(s) |  [N°champ 2] Expression(s) régulière(s) | Nombre d'interactions | Nombres d'interactants 
+---                 |      ---              |           ---           |          ---          |         --- 
+**EBV-EBV**         |      eg:`[\S]+`       |      eg:`[\S]+`         |                       |  
+**EBV-Human**       |      eg:`[\s]([\d]+)` |      eg:`[\s]([\d]+)`   |                       | 
 
-##### Combien de protéines humaines et virales sont respectivement dans jeux d'interactions EBV-Human?
+##### Combien de protéines humaines et virales sont respectivement dans les jeux d'interactions EBV-Human et EBV-EBV ?
 
 ```
 
