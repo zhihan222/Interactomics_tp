@@ -168,7 +168,7 @@ Vous pouvez desormais dessiner le réseau dans lequel:
 
 ![Graphique](ebv_ebv_network_gene.png)
 
-# Identification des cibles protéiques du virus.
+### Caractérisation des cibles protéiques du virus
 
 Pour perturber et détourner à son profit le fonctionnement du lymphocyte, le matériel protéique du virus va interagir préferentiellement avec certains processus cellulaires.
 
@@ -200,6 +200,21 @@ nx.draw_networkx_nodes(G, pos, node_color="blue", node_shape="o",nodelist=["A", 
 nx.draw_networkx_nodes(G, pos, node_color="red", node_shape="o",nodelist=["C"] )
 nx.draw_networkx_labels(G,pos,font_weight=800,font_color='black')
 nx.draw_networkx_edges(G, pos, width=0.5)
+```
+
+##### Propriétés topologiques des protéines humaines ciblées par le virus
+
+Les paires connues de protéines humaines en interaction sont disponibles dans le fichier `data/human_interactome_pair_uniprot.tab.gz`.
+
+* Construisez l'objet `networkx.Graph` stockant ces interactions.
+* Dessinez l'histogramme multiple des distributions des degrés dans cet objet réseau pour les deux populations de protéines suivantes:
+   - Protéines humaines ciblées par EBV
+   - Protéines humaines totales
+
+![Graphique](human_protein_degree.png)
+
+Qu'observez vous ?
+```
 ```
 
 ##### Identification des processus biologiques ciblés par le virus
