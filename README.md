@@ -262,6 +262,7 @@ Combien de 'modules' (= clusters) semble-t-il y avoir ?
 
 Confirmez votre interprétation en vous aidant de l'outil de clustering de STRING.
 Uploadez une image du réseau coloré qui vous semble le mieux représenter sa structure interne.
+
 ![RESEAU_STRING](ebv_ebv_network_gene.png)
 
 ## Identification des voies fonctionnelles
