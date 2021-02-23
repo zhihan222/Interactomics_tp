@@ -6,10 +6,10 @@
 Nous allons reproduire certaines analyses rapportées dans une étude du réseau d'interaction des protéines du [virus d'Epstein-Bar](https://en.wikipedia.org/wiki/Epstein%E2%80%93Barr_virus) avec certaines protéines de son hôte principal l'homme ([Calderwood et al.](https://www.pnas.org/content/104/18/7606)). Le cible cellulaire principale du virus EBV est lymphocyte B humain.  
 
 ## Mise en place
-
+Vous commencerez par "fourcher" et cloner ce repository.
 Seul Jupyter avec la librarire [networkx](https://networkx.org/) est requis.
 Les libraries Pandas et request peuvent également être utilisées.
-Il est entendu qu'a l'exception des encarts du présent `README` prévus à cet effet, la totalité du TP doît être réalisé dans un notebook que vous joindrez à ce répository git en fin de séance.
+A l'exception des encarts du présent `README` prévus à cet effet, il vous est conseillé de réaliser le TP dans un notebook Jupyter que vous joindrez à ce répository git en fin de séance.
 
 ### Données
 
@@ -22,7 +22,7 @@ Les fiches UNIPROT des protéines étudiées dans la publication sont disponible
 
 #### Interactomiques
 
-Vous deverez recupérer les données d'interactions étudiées dans la publication grâce au protocole [PSICQUIC](https://psicquic.github.io/PsicquicSpec_1_4_Rest.html).
+Nous allons devoir recupérer les données d'interactions étudiées dans la publication grâce au protocole [PSICQUIC](https://psicquic.github.io/PsicquicSpec_1_4_Rest.html).
 
 Ce protocole permet l'accès à distance à de nombreuses bases de données d'interactions protéine-protéine. Les interactions présentes dans ces bases de données sont obtenues par curation minutieuse de la littérature scientifique. Les interactions sont uniquement binaires (2 protéines) et toujours associées à la publication d'origine.
 D'autres informations peuvent également être rapportées.
@@ -64,20 +64,59 @@ ans = httpReq.text
 ```
 
 #### Extraction des deux sous-jeux d'interactions suivants:
-- Interactions EBV-EBV
-- Interactions EBV-Humaine
+Vous disposez d'un code écrit par votre collègue pour extraire à partir d'un chaîne de caractères au format mitab les lignes concertant:
+
+- Les interactions EBV-EBV
+- Les interactions EBV-Humaine
+
+```python
+import re
+
+def mitabReader(httpText):
+    for line in ans.split("\n"):
+        _ = line.split("\t")
+        if len(_) > 1 and _[0].startswith("uniprotkb:")\
+                      and _[1].startswith("uniprotkb:"):
+            yield [ _[0].replace("uniprotkb:", ""),\
+                    _[1].replace("uniprotkb:", "") ]\
+                  + _[2:]
+                
+            
+def isMitab_EBV_EBV(mitabArray):
+    reEBV   = "taxid:(1037[6-7]|82830)"
+    if re.search(reEBV, mitabArray[9]) and re.search(reEBV, mitabArray[10]):
+        return True
+    return False
+
+def isMitab_Human_EBV(mitabLine):
+    # Je ferai ça plus tard
+    return False
 
 
-**Ne retenir que les lignes MITAB dans lesquelles chaque interactant possède un identifiant UNIPROT**
+EBV_EBV_mitab   = []
+EBV_Human_mitab = []
+total = 0
+for mitabArray in mitabReader(ans):
+    total += 1
+    if isMitab_EBV_EBV(mitabArray):
+        EBV_EBV_mitab.append(mitabArray)
+    elif isMitab_Human_EBV(mitabArray):
+        EBV_Human_mitab.append(mitabArray)
+    else : 
+        raise ValueError("Je ne connais pas cette espece ==> ", mitabArray[9:11])
 
-##### Proposer les expressions régulières et les champs auxquels les appliquer pour opérer les filtres suivants:
+print(f"Nombre total d'interactions {total}, EBV-EBV {len(EBV_EBV_mitab)}")
+```
+
+##### Que fait la fonction `mitabReader` ?
+```
+```
+
+##### Après avoir réparé ce code veuillez
 - Extraire les lignes MITAB impliquant uniquement des protéines d'EBV, quel est leur nombre ?
 - Extraire les lignes MITAB impliquant des protéines humaines et des protéines d'EBV, quel est leur nombre ?
-
-Jeux d'interactions | [N°champ 1] Expression(s) régulière(s) |  [N°champ 2] Expression(s) régulière(s) | Nombre d'interactions | Nombres d'interactants 
----                 |      ---              |           ---           |          ---          |         --- 
-**EBV-EBV**         |      eg:`[\S]+`       |      eg:`[\S]+`         |                       |  
-**EBV-Human**       |      eg:`[\s]([\d]+)` |      eg:`[\s]([\d]+)`   |                       | 
+```
+```
 
 ##### Combien de protéines humaines et virales sont respectivement dans les jeux d'interactions EBV-Human et EBV-EBV ?
 
