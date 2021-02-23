@@ -63,11 +63,14 @@ ans = httpReq.text
 
 ```
 
-#### Extraction des deux sous-jeux d'interactions suivants:
+#### Extraction des deux sous-jeux d'interactions
+
 Vous disposez d'un code écrit par votre collègue pour extraire à partir d'un chaîne de caractères au format mitab les lignes concertant:
 
 - Les interactions EBV-EBV
 - Les interactions EBV-Humaine
+
+Malheuresement, votre collègue a du partir en urgence. Vous devez comprendre et compléter son code pour mener à bien l'extraction des deux jeux d'interactions.
 
 ```python
 import re
