@@ -196,6 +196,8 @@ def proteinDict(uniprotID, root):
     raise ValueError(f"{uniprotID} nor found in XML document")
 ```
 
+Vérifier votre réparation du code en l'appliquant au test ci-dessous.
+
 ```python
 # Test
 tree = parse('./data/Calderwood_Human_proteome.xml')
@@ -203,12 +205,82 @@ root = tree.getroot()
 proteinDict("Q53Y88", root)
 ```
 
-Vous pouvez desormais dessiner le réseau dans lequel:
+###### Convertir les noms des protéines
+Pour convertir tous les noms des noeuds du réseau en noms de gènes, il vous est demandé de construire à l'aide de la fonction `proteinDict()` précédente un dictionaire dans lequel les couples `{clé, valeur}` sont les `{ identifiant_uniprot, nom_de_gène}` .
+
+Par chance, un code produit par un encadrant bienveillant est disponible !
+
+```python
+import re
+
+def geneNameDictFromMitab(mitab, xmlRoot, reTAXID="taxid:(1037[6-7]|82830)"):
+    """ Extract geneNames from provided xmlHandler
+        It defaults to uniprotID if geneName is not found
+        Returns a dict of key,value = UNIPROTID, GeneName || UNIPROTID
+    """
+    nodeLabels = {}
+    for d in mitab:
+        for i,uniprotID in enumerate(d[:2]):
+            if re.search(reTAXID, d[i + 9]):
+                if not uniprotID in nodeLabels:
+                    protData = proteinDict(uniprotID, xmlRoot)
+                    nodeLabels[uniprotID] = protData['geneName']\
+                                             if protData['geneName']\
+                                             else uniprotID
+    return nodeLabels
+
+tree = parse('./data/Calderwood_EBV_proteome.xml')
+root = tree.getroot()
+EBV_node_label = geneNameDictFromMitab(EBV_EBV_mitab, root)
+```
+
+Il est malheureusement cassant comme le démontre l'exemple 
+
+```python
+tree = parse('./data/Calderwood_Human_proteome.xml')
+root = tree.getroot()
+EBV_Human_node_label = geneNameDictFromMitab(EBV_Human_mitab, root)
+```
+
+Proposer une amélioration du code et produisez ensuite deux dictionaires de conversion:
+
+- nodeLabelEBV_dict  
+- nodeLabelHuman_dict
+
+Il est possible de dessiner noeuds, arêtes et labels séparemment. Comme dans l'exemple suivant:
+
+```python
+plt.figure(figsize=(12, 8))# Set overall figure size
+
+G = nx.Graph()
+
+for data in [("x", "y"), ("j", "k"), ("y","j"), ("k","y")]:
+    G.add_edge(data[0], data[1])
+    
+name_map = {
+    "x" : "Tintin", "y" : "Milou",
+    "j" : "Tryphon", "k" : "Haddock"
+}
+liste1=["x", "y"]
+liste2=["j", "k"]
+
+# Compute layout then draw on it
+pos = nx.spring_layout(G)
+# node shapes are registred here : https://matplotlib.org/stable/api/markers_api.html
+nx.draw_networkx_nodes(G, pos, liste1, node_color='red', node_shape='s')
+nx.draw_networkx_nodes(G, pos, liste2, node_color='blue', node_shape='o' )
+nx.draw_networkx_edges(G, pos)
+nx.draw_networkx_labels(G, pos, labels=name_map, font_size=12)
+
+plt.show()
+```
+
+![Graphique](assets/example_draw.png)
+
+Vous pouvez desormais dessiner le réseau dans lequel des interactions **EBV**:
 
 - les arêtes relient deux protéines en interaction
 - les noeuds sont les noms des gènes correspondant aux protéines.
-
-![Graphique](ebv_ebv_network_gene.png)
 
 ### Caractérisation des cibles protéiques du virus
 
