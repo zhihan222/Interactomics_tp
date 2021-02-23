@@ -221,7 +221,68 @@ Vous pouvez jouer sur la taille de la figure et la constante de ressort *k* du r
 
 ![Graphique](ebv_human_network_gene.png)
 
-###### Optionel
+
+
+
+
+
+
+
+## Analyse des interactions entre protéines humaines avec STRING
+
+Maintenant que vous avez pu visualiser le réseau des interactions physiques virus/homme, vous allez utiliser la ressource STRING pour visualiser les interactions entre les protéines humaines ciblées par le virus.
+
+Comme décrit dans la publication, 173 interactions virus/homme ont été observées, impliquant 112 protéines humaines.
+
+
+### Representation des interactions avec STRING
+
+Aller sur le site de [STRING](string-db.org), et afficher les interactions entre les 112 protéines humaies ciblées par le virus:
+
+1. Aller dans *Search*
+2. puis *Multiple proteins*
+3. charger le fichier human_proteins_unique.txt, en spécifiant l'organisme *Homo Sapiens*,
+4. valider les protéines identifiées par STRING (en cliquant sur *Continue*).
+
+Par défaut, STRING affiche les interactions avec tous les canaux, a partir d'un indice de confiance 'moyen', c'est a dire supérieur a 0.4.
+Nous allons conserver ces paramètres par défaut.
+
+## Simplification du réseau
+
+Nous allons essayer d'exploiter ce réseau pour mettre en évidence les voies fonctionnelles ciblées par le virus.
+
+Afin de simplifier l'analyse, éliminer les protéines non connectées au reste du réseau:
+Aller dans Settings, Advanced Settings, network display options: hide disconnected nodes in the network.
+
+Que pouvez-vous dire de la structure de ce réseau ?
+Combien de 'modules' (= clusters) semble-t-il y avoir ?
+
+Confirmez votre interprétation en vous aidant de l'outil de clustering de STRING.
+Uploadez une image du réseau coloré qui vous semble le mieux représenter sa structure interne.
+![RESEAU_STRING](ebv_ebv_network_gene.png)
+
+## Identification des voies fonctionnelles
+
+Pour les deux clusters principaux, naviguez dans les annotations des protéines, et essayez de proposer des hypothèse quand au mécanisme d'action de EBV, en expliquant votre démarche.
+
+(Toutes les hypothèses sont intéressantes si vous expliquez votre façon de faire).
+
+```
+```
+
+Comment procéderiez-vous si vous deviez faire cette analyse de manière plus rigoureuse ?
+
+```
+
+```
+
+
+
+
+
+
+
+## Questions Optionelles
 
 Les noeuds du réseau d'interaction peut aussi être divisés en deux partitions, humaine et virale. Vous disposez, ci-dessous d'un exemple de rendu graphique "bipartite" sur deux selections arbitraires de noeuds. Essayez de l'adapter au problème de représentation graphique du réseau d'interaction EBV/Humain
 
@@ -273,164 +334,4 @@ Nous allons observés les termes GO présents dans les protéines humaines les p
 
 ```
 
-```
-
-##### Bouquet final !
-
-Bien souvent, un degré élevé d'interaction est requis pour visualiser des graphs complexes. Le JavaScript, notamment la librairie [D3](https://d3js.org/), est actuellement une solution technique de choix pour construire des représentations visuelles riches et interactives.
-
-###### 1) Production d'un fichier JSON, encodant le graph d'interaction EBV/Human
-
-- G2 est l'objet networkx *graph*
-- `humanGeneLabels` et `ebvGeneLabels` sont des tables de conversions `{ clé[accesseur uniprot]:valeur[nom de gène] }`
-
-```python
-import json
-nodes = [{'name': str(i),
-          'id': humanGeneLabels[i] if i in humanGeneLabels else ebvGeneLabels[i],
-          'type' : 'Human' if i in humanGeneLabels.keys() else 'EBV',
-          'weight':G2.degree(i)
-         }
-         for i in G2.nodes()
-        ]
-
-links = []
-for a,b in G2.edges() :
-    _ = { "source" : None, "target" : None }
-
-    for i, n in enumerate(nodes):
-        if n['name'] == a:
-            _["source"] = i
-        elif n['name'] == b:
-            _["target"] = i
-    if  _["source"] is None or _["target"] is None:
-        print(_)
-        raise ValueError(a,b)
-    links.append(_)
-         
-with open('graph.json', 'w') as f:
-    json.dump({'nodes': nodes, 'links': links},
-              f, indent=4)
-```
-
-###### 2) Construction d'une cellule de rendu Jupyter contenant la vue HTML
-```python
-%%html
-<div id="d3-example"></div>
-<style>
-.node {stroke: #fff; stroke-width: 1.5px;}
-.link {stroke: #999; stroke-opacity: .6;}
-</style>
-```
-
-###### 3) Injection dans la cellule précedente du SVG représentant le réseau encodé dans `graph.json`
-
-```javascript
-%%javascript
-// Fetch D3 library
-const d3path = "https://d3js.org/d3.v6.min.js"
-// Or load it locally, by default served from ~.jupyter/extensions
-//const d3path = "d3.v6.min.js"
- console.log("Starting");
-// We load the d3.js library from the Web.
-require.config( { paths : { d3: d3path }
-    } );
-
-require(["d3"], function(d3) {
-    console.log("Loading");
-  // The code in this block is executed when the
-  // d3.js library has been loaded.
-
-  // First, we specify the size of the canvas
-  // containing the visualization (size of the
-  // <div> element).
-  var width = 800, height = 800;
-
-  // We create a color scale.
-  var color = d3.scale.category10();
-
-  // Create scale for node radius
-  let rMin = 3, rMax = 12;
-  let degMin = 1, degMax = 0;
-
-  // We create a force-directed dynamic graph layout.
-  var force = d3.layout.force()
-    .charge(-120)
-    .linkDistance(30)
-    .size([width, height]);
-
-  // In the <div> element, we create a <svg> graphic
-  // that will contain our interactive visualization.
-  var svg = d3.select("#d3-example").select("svg")
-  if (svg.empty()) {
-    svg = d3.select("#d3-example").append("svg")
-          .attr("width", width)
-          .attr("height", height);
-  }
-
-  // We load the JSON file.
-  d3.json("graph.json", function(error, graph) {
-    // In this block, the file has been loaded
-    // and the 'graph' object contains our graph.
-    console.log("Loading JSON")
-    // We load the nodes and links in the
-    // force-directed graph.
-    console.dir(graph);
-    force.nodes(graph.nodes);
-    console.log("nodes loaded");
-    force.links(graph.links)
-    console.log("links loaded");
-   
-    // We create a <line> SVG element for each link
-    // in the graph.
-    var link = svg.selectAll(".link")
-      .data(graph.links)
-      .enter().append("line")
-      .attr("class", "link");
-
-    // We create a <circle> SVG element for each node
-    // in the graph, and we specify a few attributes.
-    var node = svg.selectAll(".node")
-      .data(graph.nodes)
-      .enter().append("circle")
-      .attr("class", "node")
-      //.attr("r", 5)  // radius
-      .style("fill", function(d) {
-          return  d.type === "EBV" ? "firebrick" : "steelblue"
-      }).each(function(d) {
-          degMax = d.weight > degMax ? d.weight : degMax;
-      })
-      .call(force.drag);
-      // We parameterize the radius scale according to data
-      let rScale = d3.scale.linear()
-          .domain([degMin, degMax]) // unit: degree
-          .range([rMin,rMax]); // unit: pixels
-      node.attr("r", function(d) {
-           return rScale(d.weight);
-      });  // radius
-      
-    // The name of each node is the node number.
-    node.append("title")
-        .text(function(d) { return d.name; });
-
-    // We bind the positions of the SVG elements
-    // to the positions of the dynamic force-directed
-    // graph, at each time step.
-    force.on("tick", function() {
-      link.attr("x1", function(d){return d.source.x})
-          .attr("y1", function(d){return d.source.y})
-          .attr("x2", function(d){return d.target.x})
-          .attr("y2", function(d){return d.target.y});
-
-      node.attr("cx", function(d){return d.x})
-          .attr("cy", function(d){return d.y});
-    });
-      
-    force.start();
-    console.log("OK");
-  });
-},
-function (err) {
-    console.log("Could not load JS library " + err);
-});
 ```
