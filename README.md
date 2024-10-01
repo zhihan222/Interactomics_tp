@@ -92,7 +92,9 @@ def isMitab_EBV_EBV(mitabArray):
     return False
 
 def isMitab_Human_EBV(mitabLine):
-    # Je ferai ça plus tard
+    reSapiens = "taxid:9606"
+    if re.search(reSapiens, mitabArray[9]) and re.search(reSapiens, mitabArray[10]):
+        return True
     return False
 
 
