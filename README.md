@@ -48,7 +48,7 @@ Une librairie pratique pour manipuler des requêtes HTTP est [requests](https://
 
 ```python
 import requests
-url = "https://www.ens-lyon.fr/LBMC"
+url = "http://www.ebi.ac.uk/Tools/webservices/psicquic/intact/webservices/current/search/query/pubid:17446270"
 
 try:
     httpReq = requests.get(url, proxies=None)
