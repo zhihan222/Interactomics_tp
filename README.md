@@ -48,7 +48,7 @@ Une librairie pratique pour manipuler des requêtes HTTP est [requests](https://
 
 ```python
 import requests
-url = "https://mmsb.cnrs.fr/equipe/mobi/"
+url = "https://www.ens-lyon.fr/LBMC"
 
 try:
     httpReq = requests.get(url, proxies=None)
@@ -65,7 +65,7 @@ ans = httpReq.text
 
 #### Extraction des deux sous-jeux d'interactions
 
-Vous disposez d'un code écrit par votre collègue pour extraire à partir d'un chaîne de caractères au format mitab les lignes concertant:
+Vous disposez d'un code écrit par votre collègue pour extraire à partir d'un chaîne de caractères au format mitab les lignes concernant:
 
 - Les interactions EBV-EBV
 - Les interactions EBV-Humaine
@@ -132,7 +132,7 @@ print(f"Nombre total d'interactions {total}, EBV-EBV {len(EBV_EBV_mitab)}")
 - MITAB EBV/EBV
 - MITAB EBV/Human
 
-Chacun ne contetant que des interactants référés par un numéro d'accession UNIPROT
+Chacun ne contenant que des interactants référés par un numéro d'accession UNIPROT
 
 ### Construction du réseau d'interactions EBV/EBV
 
@@ -193,7 +193,7 @@ def proteinDict(uniprotID, root):
 
                 data["GOterms"] = goTerms(entry)
                 return data
-    raise ValueError(f"{uniprotID} nor found in XML document")
+    raise ValueError(f"{uniprotID} not found in XML document")
 ```
 
 Vérifier votre réparation du code en l'appliquant au test ci-dessous.
