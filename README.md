@@ -115,6 +115,7 @@ print(f"Nombre total d'interactions {total}, EBV-EBV {len(EBV_EBV_mitab)}")
 
 ##### Que fait la fonction `mitabReader` ?
 ```
+La fonction mitabReader est conçue pour analyser un texte de format MITAB (Molecular Interaction Tabulated format) et extraire des informations pertinentes concernant les interactions protéine-protéine.
 ```
 
 ##### Après avoir réparé ce code veuillez
